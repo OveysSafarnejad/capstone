@@ -1,3 +1,5 @@
+
+<-------------------------------MODULE 1 -------------------------------------->
 create db server:
 
 ```
@@ -46,3 +48,74 @@ chmod +x export_data.sh
 ```
 
 to export data.
+
+
+<-------------------------------MODULE 2 -------------------------------------->
+
+create db server:
+
+```
+docker-compose -f mongo_compose.yml up -d
+```
+
+
+login to db container:
+```
+docker exec -it [container] bash
+```
+
+login to mongo
+```
+mongosh -u db_user -p s3cr3t --authenticateDatabase admin
+```
+
+mongosh command
+```
+show dbs
+use your_database_name (for selecting and also creating)
+show collections
+db.collection_name.insert({ key: "value" })
+db.collection_name.find()
+db.collection_name.count()
+db.electronics.createIndex({type: 1}) # ascending
+db.electronics.find({type:'laptop'}) # filter laptops
+
+```
+
+
+import data from catalog.json:
+```
+mongoimport --username db_user --password s3cr3t --db catalog --collection electronics --file electronics.json --authenticationDatabase admin
+```
+
+create index on field 'type':
+```
+db.electronics.createIndex({type: 1}) # ascending
+```
+
+queries:
+```
+db.electronics.find({type: 'smart phone', 'screen size': 6})
+
+
+db.yourCollection.aggregate([
+    {
+        $match: {
+            type: "smart phone"
+        }
+    },
+    {
+        $group: {
+            _id: "$type",
+            averageScreenSize: { $avg: "$screen size" }
+        }
+    }
+])
+
+```
+
+
+exporting data:
+```
+mongoexport --username db_user --password s3cr3t --db catalog --collection electronics --fields _id,type,model --out electronics.csv --authenticationDatabase admin
+```
