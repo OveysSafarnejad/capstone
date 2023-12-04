@@ -66,8 +66,15 @@ docker exec -it [container] bash
 
 login to mongo
 ```
-mongosh -u db_user -p s3cr3t --authenticateDatabase admin
+mongosh -u db_user -p s3cr3t --authenticateDatabase admin 
 ```
+--authenticationDatabase admin:
+
+This part specifies the authentication database as "admin." In MongoDB, users and their credentials are typically stored in a specific database, and this database is known as the authentication database. The user account specified (in this case, "root") and its password are looked up in the "admin" database.
+
+local:
+
+After successful authentication against the specified authentication database ("admin" in this case), MongoDB switches to the "local" database by default. The "local" database is a system database used by MongoDB for various purposes, and it often contains information specific to the MongoDB instance.
 
 mongosh command
 ```
